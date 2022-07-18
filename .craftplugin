@@ -1,0 +1,26 @@
+{
+	"pluginName": "Craft Geoman",
+	"pluginDescription": "geometry editing tools",
+	"pluginVersion": "1.0.0",
+	"pluginAuthorName": "webworker",
+	"pluginVendorName": "",
+	"pluginAuthorUrl": "https://webworker.me",
+	"pluginAuthorGithub": "handplant",
+	"codeComments": "yes",
+	"pluginComponents": [
+		"fieldtypes"
+	],
+	"consolecommandName": "",
+	"controllerName": "",
+	"cpsectionName": "",
+	"elementName": "",
+	"fieldName": "Geoman",
+	"modelName": "",
+	"purchasableName": "",
+	"recordName": "",
+	"serviceName": "",
+	"taskName": "",
+	"utilityName": "",
+	"widgetName": "",
+	"apiVersion": "api_version_3_0"
+}

@@ -1,0 +1,125 @@
+[x-cloak] {
+	display: none !important;
+}
+
+.geoman {
+	position: relative;
+	overflow: hidden;
+}
+
+.geoman__wrapper {
+	position: relative;
+	overflow: hidden;
+}
+
+.geoman__map {
+	width: 100%;
+	height: 60vh;
+	min-height: 600px;
+	z-index: 1;
+}
+
+.geoman__viewer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	width: 100%;
+	overflow: auto;
+}
+
+@media (min-width: 1500px) {
+	.geoman__viewer {
+		width: 60%;
+	}
+}
+
+@media (min-width: 2000px) {
+	.geoman__viewer {
+		width: 40%;
+	}
+}
+
+.geomap__logo {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	height: 45px;
+	width: 45px;
+	z-index: 2;
+}
+
+.geoman__toggle {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	z-index: 3;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: white;
+	color: black;
+	height: 30px;
+	width: 30px;
+	border-radius: 2px;
+	box-shadow: 0 1px 5px rgb(0 0 0 / 65%);
+	line-height: 30px;
+	cursor: pointer;
+}
+
+.geoman__toggle--open {
+	right: 25px;
+}
+
+.geoman__toggle:hover {
+	background: #f2f2f2;
+}
+
+.geoman__toggle > svg {
+	height: 20px;
+	width: 20px;
+}
+
+.geoman__textarea {
+}
+
+.geoman_tools {
+	background: var(--gray-050);
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 10px;
+	border-radius: 0px 0px 6px 6px;
+}
+
+.fullscreen-icon {
+	background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 26 52" xmlns="http://www.w3.org/2000/svg"><path d="M20.6 36.7H16a.9.9 0 0 1-.8-.8v-4.5c0-.2.2-.4.4-.4h1.4c.3 0 .5.2.5.4v3h3c.2 0 .4.2.4.5v1.4c0 .2-.2.4-.4.4zm-9.9-.8v-4.5c0-.2-.2-.4-.4-.4H8.9c-.3 0-.5.2-.5.4v3h-3c-.2 0-.4.2-.4.5v1.4c0 .2.2.4.4.4H10c.4 0 .8-.4.8-.8zm0 10.7V42c0-.4-.4-.8-.8-.8H5.4c-.2 0-.4.2-.4.4v1.4c0 .3.2.5.4.5h3v3c0 .2.2.4.5.4h1.4c.2 0 .4-.2.4-.4zm6.9 0v-3h3c.2 0 .4-.2.4-.5v-1.4c0-.2-.2-.4-.4-.4H16c-.4 0-.8.4-.8.8v4.5c0 .2.2.4.4.4h1.4c.3 0 .5-.2.5-.4zM5 10.3V5.9c0-.5.4-.9.9-.9h4.4c.2 0 .4.2.4.4V7c0 .2-.2.4-.4.4h-3v3c0 .2-.2.4-.4.4H5.4a.4.4 0 0 1-.4-.4zm10.3-4.9V7c0 .2.2.4.4.4h3v3c0 .2.2.4.4.4h1.5c.2 0 .4-.2.4-.4V5.9c0-.5-.4-.9-.9-.9h-4.4c-.2 0-.4.2-.4.4zm5.3 9.9H19c-.2 0-.4.2-.4.4v3h-3c-.2 0-.4.2-.4.4v1.5c0 .2.2.4.4.4h4.4c.5 0 .9-.4.9-.9v-4.4c0-.2-.2-.4-.4-.4zm-9.9 5.3V19c0-.2-.2-.4-.4-.4h-3v-3c0-.2-.2-.4-.4-.4H5.4c-.2 0-.4.2-.4.4v4.4c0 .5.4.9.9.9h4.4c.2 0 .4-.2.4-.4z" fill="currentColor"/></svg>');
+}
+
+json-viewer {
+	/* Background, font and indentation */
+	--background-color: black;
+	--color: #f8f8f2;
+	--font-family: monaco, Consolas, "Lucida Console", monospace;
+	--font-size: 14px;
+	--indent-size: 1.5em;
+	--indentguide-size: 1px;
+	--indentguide-style: solid;
+	--indentguide-color: #333;
+	--indentguide-color-active: #333;
+
+	/* Types colors */
+	--string-color: #a3eea0;
+	--number-color: #d19a66;
+	--boolean-color: #4ba7ef;
+	--null-color: #df9cf3;
+	--property-color: #6fb3d2;
+
+	/* Collapsed node preview */
+	--preview-color: rgba(222, 175, 143, 0.9);
+
+	/* Search highlight color */
+	--highlight-color: #6fb3d2;
+	padding: 1px 10px;
+}

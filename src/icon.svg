@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 300 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1.14948,0,0,1.14948,79.7897,74.6203)">
+        <circle cx="61.251" cy="65.912" r="120.074" style="fill:url(#_Linear1);"/>
+    </g>
+    <g transform="matrix(7.86758,0,0,7.86758,54.7705,50.7808)">
+        <path d="M12,20.9L16.95,15.95C18.262,14.638 19,12.856 19,11.001C19,7.16 15.84,4.001 12,4.001C8.16,4.001 5,7.16 5,11.001C5,12.856 5.738,14.638 7.05,15.95L12,20.9ZM12,23.728L5.636,17.364C3.949,15.677 3,13.386 3,11C3,6.063 7.063,2 12,2C16.937,2 21,6.063 21,11C21,13.386 20.051,15.677 18.364,17.364L12,23.728ZM12,13C13.097,13 14,12.097 14,11C14,9.903 13.097,9 12,9C10.903,9 10,9.903 10,11C10,12.097 10.903,13 12,13ZM12,15C9.806,15 8,13.194 8,11C8,8.806 9.806,7 12,7C14.194,7 16,8.806 16,11C16,13.194 14.194,15 12,15Z" style="fill:white;fill-rule:nonzero;"/>
+        <clipPath id="_clip2">
+            <path d="M12,20.9L16.95,15.95C18.262,14.638 19,12.856 19,11.001C19,7.16 15.84,4.001 12,4.001C8.16,4.001 5,7.16 5,11.001C5,12.856 5.738,14.638 7.05,15.95L12,20.9ZM12,23.728L5.636,17.364C3.949,15.677 3,13.386 3,11C3,6.063 7.063,2 12,2C16.937,2 21,6.063 21,11C21,13.386 20.051,15.677 18.364,17.364L12,23.728ZM12,13C13.097,13 14,12.097 14,11C14,9.903 13.097,9 12,9C10.903,9 10,9.903 10,11C10,12.097 10.903,13 12,13ZM12,15C9.806,15 8,13.194 8,11C8,8.806 9.806,7 12,7C14.194,7 16,8.806 16,11C16,13.194 14.194,15 12,15Z" clip-rule="nonzero"/>
+        </clipPath>
+        <g clip-path="url(#_clip2)">
+            <g id="Ebene1">
+            </g>
+        </g>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-324.459,350.526,-350.526,-324.459,225.013,-98.2675)"><stop offset="0" style="stop-color:rgb(255,4,0);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(0,12,255);stop-opacity:1"/></linearGradient>
+    </defs>
+</svg>

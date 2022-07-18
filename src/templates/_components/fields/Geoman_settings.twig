@@ -1,0 +1,47 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Craft Geoman plugin for Craft CMS
+ *
+ * Geoman Field Settings
+ *
+ * @author    webworker
+ * @copyright Copyright (c) 2022 webworker
+ * @link      https://webworker.me
+ * @package   CraftGeoman
+ * @since     1.0.0
+ */
+#}
+
+{% import '_includes/forms' as forms %}
+
+{{
+	forms.textField({
+		label: 'Map Center Latitude',
+		id: 'geomanMapLatitude',
+		name: 'geomanMapLatitude',
+		value: field['geomanMapLatitude'],
+		required: true,
+		errors: field.getErrors('geomanMapLatitude')
+	})
+}}
+
+{{
+	forms.textField({
+		label: 'Map Center Longitude',
+		id: 'geomanMapLongitude',
+		name: 'geomanMapLongitude',
+		value: field['geomanMapLongitude'],
+		required: true
+	})
+}}
+
+{{
+	forms.textField({
+		label: 'Map Zoom'|t('geoman'),
+		id: 'geomanMapZoom',
+		name: 'geomanMapZoom',
+		value: field['geomanMapZoom'],
+		required: true
+	})
+}}
