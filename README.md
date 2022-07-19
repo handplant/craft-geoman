@@ -1,5 +1,5 @@
 <p>
-<img src="resources/img/plugin-logo.png"  width="60px"/>
+<img src="resources/img/plugin-logo.svg" width="60px"/>
 </p>
 
 <h1>Craft Geoman</h1>
