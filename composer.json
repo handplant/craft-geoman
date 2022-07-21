@@ -3,18 +3,19 @@
 	"description": "geometry editing tools",
 	"type": "craft-plugin",
 	"version": "1.0.0",
+	"license": "MIT",
 	"keywords": [
 		"craft",
 		"cms",
 		"craftcms",
 		"craft-plugin",
-		"craft geoman"
+		"craft geoman",
+		"craft field"
 	],
 	"support": {
 		"docs": "https://github.com/handplant/craft-geoman/blob/master/README.md",
 		"issues": "https://github.com/handplant/craft-geoman/issues"
 	},
-	"license": "proprietary",
 	"authors": [
 		{
 			"name": "webworker",
