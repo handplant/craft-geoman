@@ -43,7 +43,7 @@ class GeomanAsset extends AssetBundle
 			];
 
 			$this->js = [
-				'js/Geoman.js'
+				'js/geoman.js'
 			];
 		}
 
