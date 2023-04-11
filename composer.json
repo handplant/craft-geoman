@@ -1,49 +1,49 @@
 {
-	"name": "handplant/craft-geoman",
-	"description": "geometry editing tools",
-	"type": "craft-plugin",
-	"version": "1.0.0",
-	"license": "MIT",
-	"keywords": [
-		"craft",
-		"cms",
-		"craftcms",
-		"craft-plugin",
-		"craft geoman",
-		"craft field"
-	],
-	"support": {
-		"docs": "https://github.com/handplant/craft-geoman/blob/master/README.md",
-		"issues": "https://github.com/handplant/craft-geoman/issues"
-	},
-	"authors": [
-		{
-			"name": "webworker",
-			"homepage": "https://webworker.me"
-		}
-	],
-	"require": {
-		"php": "^8.0",
-		"craftcms/cms": "^4.0.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"handplant\\craftgeoman\\": "src/"
-		}
-	},
-	"extra": {
-		"name": "Craft Geoman",
-		"handle": "craft-geoman",
-		"developer": "webworker",
-		"developerUrl": "https://webworker.me",
-		"documentationUrl": "https://github.com/handplant/craft-geoman/blob/master/README.md",
-		"changelogUrl": "https://raw.githubusercontent.com/handplant/craft-geoman/master/CHANGELOG.md",
-		"class": "handplant\\craftgeoman\\CraftGeoman"
-	},
-	"config": {
-		"allow-plugins": {
-			"yiisoft/yii2-composer": true,
-			"craftcms/plugin-installer": true
-		}
-	}
+  "name": "handplant/craft-geoman",
+  "description": "geometry editing tools",
+  "type": "craft-plugin",
+  "version": "1.0.1",
+  "license": "MIT",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "craft geoman",
+    "craft field"
+  ],
+  "support": {
+    "docs": "https://github.com/handplant/craft-geoman/blob/master/README.md",
+    "issues": "https://github.com/handplant/craft-geoman/issues"
+  },
+  "authors": [
+    {
+      "name": "webworker",
+      "homepage": "https://webworker.me"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "craftcms/cms": "^4.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "handplant\\craftgeoman\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Craft Geoman",
+    "handle": "craft-geoman",
+    "developer": "webworker",
+    "developerUrl": "https://webworker.me",
+    "documentationUrl": "https://github.com/handplant/craft-geoman/blob/master/README.md",
+    "changelogUrl": "https://raw.githubusercontent.com/handplant/craft-geoman/master/CHANGELOG.md",
+    "class": "handplant\\craftgeoman\\CraftGeoman"
+  },
+  "config": {
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true,
+      "craftcms/plugin-installer": true
+    }
+  }
 }
