@@ -1,41 +1,52 @@
-{# @var craft \craft\web\twig\variables\CraftVariable #}
-{#
-/**
- * Craft Geoman plugin for Craft CMS
- *
- * Geoman Field Settings
- *
- * @author    webworker
- * @copyright Copyright (c) 2022 webworker
- * @link      https://webworker.me
- * @package   CraftGeoman
- * @since     2.0.0
- */
-#}
-
 {% import '_includes/forms' as forms %}
 
 {{ forms.textField({
-	label: 'Map Center Latitude',
-	id: 'geomanMapLatitude',
-	name: 'geomanMapLatitude',
-	value: field['geomanMapLatitude'],
-	required: true,
-	errors: field.getErrors('geomanMapLatitude')
+    label: 'Map Center Latitude'|t('craft-geoman'),
+    id: 'geomanMapLatitude',
+    name: 'geomanMapLatitude',
+    value: field.geomanMapLatitude,
+    required: true,
+    errors: field.getErrors('geomanMapLatitude')
 }) }}
 
 {{ forms.textField({
-	label: 'Map Center Longitude',
-	id: 'geomanMapLongitude',
-	name: 'geomanMapLongitude',
-	value: field['geomanMapLongitude'],
-	required: true
+    label: 'Map Center Longitude'|t('craft-geoman'),
+    id: 'geomanMapLongitude',
+    name: 'geomanMapLongitude',
+    value: field.geomanMapLongitude,
+    required: true,
+    errors: field.getErrors('geomanMapLongitude')
 }) }}
 
 {{ forms.textField({
-	label: 'Map Zoom'|t('geoman'),
-	id: 'geomanMapZoom',
-	name: 'geomanMapZoom',
-	value: field['geomanMapZoom'],
-	required: true
+    label: 'Map Zoom'|t('craft-geoman'),
+    id: 'geomanMapZoom',
+    name: 'geomanMapZoom',
+    value: field.geomanMapZoom,
+    required: true,
+    errors: field.getErrors('geomanMapZoom')
+}) }}
+
+{{ forms.textField({
+    label: 'Map Height'|t('craft-geoman'),
+    instructions: 'Height in pixels (240–2000). The map expands if its toolbar needs more space.'|t('craft-geoman'),
+    id: 'geomanMapHeight',
+    name: 'geomanMapHeight',
+    type: 'number',
+    min: 240,
+    max: 2000,
+    step: 1,
+    value: field.geomanMapHeight,
+    required: true,
+    errors: field.getErrors('geomanMapHeight')
+}) }}
+
+{{ forms.checkboxGroupField({
+    label: 'Drawing Tools'|t('craft-geoman'),
+    instructions: 'Controls new drawing only. Existing geometry remains visible and editable, and imports are not restricted. Select none to hide all drawing tools.'|t('craft-geoman'),
+    id: 'geomanDrawingTools',
+    name: 'geomanDrawingTools',
+    options: toolOptions,
+    values: field.geomanDrawingTools,
+    errors: field.getErrors('geomanDrawingTools')
 }) }}

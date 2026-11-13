@@ -1,82 +1,39 @@
-<p>
-<img src="resources/img/plugin-logo.svg" width="60px"/>
-</p>
+# Craft Geoman
 
-<h1>Craft Geoman</h1>
-
-This plugin adds a “Geoman” field type to Craft CMS, which provides geometry editing powered by [leaflet-geoman](https://geoman.io/leaflet-geoman) by geoman.io.
-
-<p>
-<img src="resources/img/screenshot1.png"  width="800px"/>
-</p>
-
-## Requirements
-
-This plugin requires Craft CMS 4.0 or later.
+A geometry field for Craft CMS 5, powered by Leaflet and Leaflet-Geoman Free. Draw and edit maps, import/export GeoJSON, and add text annotations.
 
 ## Installation
 
-You can install this plugin from the Plugin Store or with Composer.
+Requires Craft CMS **5.0+ (5.x)** and PHP **8.2+**.
 
-#### From the Plugin Store
+Run `composer require handplant/craft-geoman`, then install Craft Geoman under **Settings → Plugins**.
 
-Go to the Plugin Store in your project’s Control Panel and search for “Craft Geoman”. Then click on the “Install” button in its modal window.
+Updating an existing installation? Read the [upgrade notes](docs/UPGRADING.md) first. For Craft 4, use plugin 1.x on the `craft-cms-4` branch.
 
-#### With Composer
+## Usage
 
-Open your terminal and run the following commands:
+- Create a **Geoman** field and add it to a field layout.
+- Draw markers, lines, rectangles, polygons, circles, circle markers, or text.
+- Use **Show all geometry** to fit the map, **GeoJSON** to inspect the value, and **Export / Import** to exchange files.
 
-```bash
-# go to the project directory
-cd /path/to/my-project
+![Geoman field with a Black Forest demo map, drawn geometry, and text annotations](resources/img/screenshot1.png)
 
-# tell Composer to load the plugin
-composer require handplant/craft-geoman
+![GeoJSON viewer showing polygon, line, and circle features](resources/img/screenshot2.png)
 
-# tell Craft to install the plugin
-./craft plugin/install craft-geoman
-```
+## Settings
 
-## Simple frontend example
+Configure each field's map center, zoom, height, and available drawing tools.
 
-```
-<link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+- **Map height:** 500px by default; configurable from 240–2000px. The map expands if the toolbar needs more room.
+- **Drawing tools:** the original six tools are enabled by default; **Text** is opt-in. Disabling a tool does not hide existing geometry or restrict imports.
+- **Editing tools:** Cut and Rotate appear when the drawing selection or existing geometry supports them. Edit, Move, and Delete remain available on editable maps.
 
-<div id="map" style="height: 500px; border: 1px solid black;"></div>
-<div id="geojson" style="display: none;">
-    {{ entry.geoman }}
-</div>
+![Geoman field settings for map center, zoom, height, and drawing tools](resources/img/field-settings.png)
 
-<!-- prettier-ignore -->
-<script>
-var map = L.map(document.getElementById('map')).setView([47.9034, 8.10577], 10);
+## Good to know
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Data ©<a href="http://osm.org/copyright">OpenStreetMap</a>',
-    maxZoom: 18
-}).addTo(map);
+The field returns a **GeoJSON string**. It does not automatically render a map on your website; see the [frontend example](docs/FRONTEND.md).
 
-var layer = L.featureGroup().addTo(map);
+Scripts and styles are bundled locally; no Geoman Pro subscription is required. Basemap tiles come from OpenStreetMap and require internet access. Its [tile usage policy](https://operations.osmfoundation.org/policies/tiles/) applies.
 
-var geojson = document.getElementById('geojson');
-if (geojson.innerHTML) {
-    var geojsonLayer = L.geoJson(JSON.parse(geojson.innerHTML), {
-        pointToLayer: (feature, latlng) => {
-            if (feature.properties.radius) {
-                return new L.Circle(latlng, feature.properties.radius)
-            } else if (feature.properties.shape == "CircleMarker") {
-                return new L.CircleMarker(latlng)
-            } else {
-                return new L.Marker(latlng)
-            }
-            return
-        },
-    })
-    geojsonLayer.eachLayer(function (l) {
-      layer.addLayer(l)
-    })
-    map.fitBounds(layer.getBounds())
-}
-</script>
-```
+[Changelog](CHANGELOG.md) · [Report an issue](https://github.com/handplant/craft-geoman/issues)

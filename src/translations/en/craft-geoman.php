@@ -1,25 +1,47 @@
 <?php
-/**
- * Craft Geoman plugin for Craft CMS 3.x
- *
- * geometry editing tools
- *
- * @link      https://webworker.me
- * @copyright Copyright (c) 2022 webworker
- */
 
-/**
- * Craft Geoman en Translation
- *
- * Returns an array with the string to be translated (as passed to `Craft::t('craft-geoman', '...')`) as
- * the key, and the translation as the value.
- *
- * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
- *
- * @author    webworker
- * @package   CraftGeoman
- * @since     1.0.0
- */
 return [
-    'Craft Geoman plugin loaded' => 'Craft Geoman plugin loaded',
+    'Geoman' => 'Geoman',
+    'GeoJSON' => 'GeoJSON',
+    'Geometry map' => 'Geometry map',
+    'Import GeoJSON' => 'Import GeoJSON',
+    'Download' => 'Download',
+    'Upload' => 'Upload',
+    'Export' => 'Export',
+    'Import' => 'Import',
+    'Map Center Latitude' => 'Map Center Latitude',
+    'Map Center Longitude' => 'Map Center Longitude',
+    'Map Zoom' => 'Map Zoom',
+    'Map Height' => 'Map Height',
+    'Height in pixels (240–2000). The map expands if its toolbar needs more space.' => 'Height in pixels (240–2000). The map expands if its toolbar needs more space.',
+    'Drawing Tools' => 'Drawing Tools',
+    'Controls new drawing only. Existing geometry remains visible and editable, and imports are not restricted. Select none to hide all drawing tools.' => 'Controls new drawing only. Existing geometry remains visible and editable, and imports are not restricted. Select none to hide all drawing tools.',
+    'Marker' => 'Marker',
+    'Line' => 'Line',
+    'Rectangle' => 'Rectangle',
+    'Polygon' => 'Polygon',
+    'Circle' => 'Circle',
+    'Circle marker' => 'Circle marker',
+    'Text' => 'Text',
+    'Map text' => 'Map text',
+    'Text annotations require Point geometry and a text string.' => 'Text annotations require Point geometry and a text string.',
+    'Show all geometry' => 'Show all geometry',
+    'The file does not contain valid JSON.' => 'The file does not contain valid JSON.',
+    'The GeoJSON geometry type is missing or not supported.' => 'The GeoJSON geometry type is missing or not supported.',
+    'The GeoJSON structure is invalid. Check the features, geometries, and properties.' => 'The GeoJSON structure is invalid. Check the features, geometries, and properties.',
+    'Coordinates must contain at least two finite numbers per position.' => 'Coordinates must contain at least two finite numbers per position.',
+    'A line needs at least two positions.' => 'A line needs at least two positions.',
+    'A polygon ring needs at least four positions.' => 'A polygon ring needs at least four positions.',
+    'The polygon ring is not closed. Its first and last positions must match.' => 'The polygon ring is not closed. Its first and last positions must match.',
+    'Location: {path}.' => 'Location: {path}.',
+    'Your existing data is unchanged.' => 'Your existing data is unchanged.',
+    'Enter fullscreen' => 'Enter fullscreen',
+    'Exit fullscreen' => 'Exit fullscreen',
+    'Enter valid, supported GeoJSON.' => 'Enter valid, supported GeoJSON.',
+    'Map tiles could not be loaded. Your geometry data is unchanged.' => 'Map tiles could not be loaded. Your geometry data is unchanged.',
+    'This saved value cannot be displayed as GeoJSON. It is preserved unchanged. Export it before importing a replacement.' => 'This saved value cannot be displayed as GeoJSON. It is preserved unchanged. Export it before importing a replacement.',
+    'The file could not be imported. Choose valid, supported GeoJSON. Your existing data is unchanged.' => 'The file could not be imported. Choose valid, supported GeoJSON. Your existing data is unchanged.',
+    'Replace all existing geometry with this file?' => 'Replace all existing geometry with this file?',
+    'JavaScript is required to edit the map. Your saved data is preserved.' => 'JavaScript is required to edit the map. Your saved data is preserved.',
+    '{name} plugin loaded' => '{name} plugin loaded',
 ];

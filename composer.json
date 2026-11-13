@@ -2,7 +2,7 @@
   "name": "handplant/craft-geoman",
   "description": "geometry editing tools",
   "type": "craft-plugin",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "keywords": [
     "craft",
@@ -13,7 +13,7 @@
     "craft field"
   ],
   "support": {
-    "docs": "https://github.com/handplant/craft-geoman/blob/master/README.md",
+    "docs": "https://github.com/handplant/craft-geoman/blob/craft-cms-5/README.md",
     "issues": "https://github.com/handplant/craft-geoman/issues"
   },
   "authors": [
@@ -36,8 +36,8 @@
     "handle": "craft-geoman",
     "developer": "webworker",
     "developerUrl": "https://webworker.me",
-    "documentationUrl": "https://github.com/handplant/craft-geoman/blob/master/README.md",
-    "changelogUrl": "https://raw.githubusercontent.com/handplant/craft-geoman/master/CHANGELOG.md",
+    "documentationUrl": "https://github.com/handplant/craft-geoman/blob/craft-cms-5/README.md",
+    "changelogUrl": "https://raw.githubusercontent.com/handplant/craft-geoman/craft-cms-5/CHANGELOG.md",
     "class": "handplant\\craftgeoman\\CraftGeoman"
   },
   "config": {

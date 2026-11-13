@@ -1,396 +1,196 @@
 <?php
-/**
- * Craft Geoman plugin for Craft CMS 5.x
- *
- * geometry editing tools
- *
- * @link      https://webworker.me
- * @copyright Copyright (c) 2022 webworker
- */
 
 namespace handplant\craftgeoman\fields;
 
-use handplant\craftgeoman\web\GeomanAsset;
-
 use Craft;
+use craft\base\Element;
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\helpers\Html;
+use craft\helpers\StringHelper;
+use handplant\craftgeoman\helpers\GeoJson;
+use handplant\craftgeoman\web\GeomanAsset;
 use yii\db\Schema;
 
-/**
- * Geoman Field
- *
- * Whenever someone creates a new field in Craft, they must specify what
- * type of field it is. The system comes with a handful of field types baked in,
- * and we’ve made it extremely easy for plugins to add new ones.
- *
- * https://craftcms.com/docs/plugins/field-types
- *
- * @author    webworker
- * @package   CraftGeoman
- * @since     2.0.0
- */
 class Geoman extends Field
 {
-	const DEFAULT_LAT = 47.997190;
-	const DEFAULT_LON = 7.853770;
-	const DEFAULT_ZOOM = 9;
+    public const DEFAULT_LAT = 47.997190;
+    public const DEFAULT_LON = 7.853770;
+    public const DEFAULT_ZOOM = 9;
+    public const DRAWING_TOOLS = [
+        'drawMarker' => 'Marker',
+        'drawPolyline' => 'Line',
+        'drawRectangle' => 'Rectangle',
+        'drawPolygon' => 'Polygon',
+        'drawCircle' => 'Circle',
+        'drawCircleMarker' => 'Circle marker',
+        'drawText' => 'Text',
+    ];
+    public const DEFAULT_DRAWING_TOOLS = ['drawMarker', 'drawPolyline', 'drawRectangle', 'drawPolygon', 'drawCircle', 'drawCircleMarker'];
 
-	// Public Properties
-	// =========================================================================
+    public float $geomanMapLatitude = self::DEFAULT_LAT;
+    public float $geomanMapLongitude = self::DEFAULT_LON;
+    public int $geomanMapZoom = self::DEFAULT_ZOOM;
+    public int $geomanMapHeight = 500;
+    public array $geomanDrawingTools = self::DEFAULT_DRAWING_TOOLS;
 
-	/**
-	 * Some attribute
-	 *
-	 * @var string
-	 */
-	public float $geomanMapLatitude = self::DEFAULT_LAT;
-	public float $geomanMapLongitude = self::DEFAULT_LON;
-	public int $geomanMapZoom = self::DEFAULT_ZOOM;
-	public int $geomanMapHeight = 500;
+    public static function displayName(): string
+    {
+        return Craft::t('craft-geoman', 'Geoman');
+    }
 
+    public function rules(): array
+    {
+        return array_merge(parent::rules(), [
+            ['geomanMapLatitude', 'double', 'min' => -90, 'max' => 90],
+            ['geomanMapLongitude', 'double', 'min' => -180, 'max' => 180],
+            ['geomanMapZoom', 'integer', 'min' => 5, 'max' => 18],
+            ['geomanMapHeight', 'integer', 'min' => 240, 'max' => 2000],
+            ['geomanDrawingTools', 'each', 'rule' => ['in', 'range' => array_keys(self::DRAWING_TOOLS), 'strict' => true]],
+        ]);
+    }
 
-	// Static Methods
-	// =========================================================================
+    public static function dbType(): array|string|null
+    {
+        return Schema::TYPE_TEXT;
+    }
 
-	/**
-	 * Returns the display name of this class.
-	 *
-	 * @return string The display name of this class.
-	 */
-	public static function displayName(): string
-	{
-		return Craft::t('craft-geoman', 'Geoman');
-	}
+    public function getContentColumnType(): string
+    {
+        return Schema::TYPE_TEXT;
+    }
 
-	// Public Methods
-	// =========================================================================
+    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
+    {
+        return $value;
+    }
 
-	/**
-	 * Returns the validation rules for attributes.
-	 *
-	 * Validation rules are used by [[validate()]] to check if attribute values are valid.
-	 * Child classes may override this method to declare different validation rules.
-	 *
-	 * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-	 *
-	 * @return array
-	 */
-	public function rules(): array
-	{
-		return array_merge(parent::rules(), [
-			[
-				'geomanMapLatitude',
-				'double',
-				'min' => -90,
-				'max' => 90
-			],
-			[
-				'geomanMapLongitude',
-				'double',
-				'min' => -180,
-				'max' => 180
-			],
-			[
-				'geomanMapZoom',
-				'integer',
-				'min' => 5,
-				'max' => 18
-			]
-		]);
-	}
+    public function serializeValue(mixed $value, ?ElementInterface $element = null): mixed
+    {
+        return $value;
+    }
 
-	/**
-	 * Returns the column type that this field should get within the content table.
-	 *
-	 * This method will only be called if [[hasContentColumn()]] returns true.
-	 *
-	 * @return string The column type. [[\yii\db\QueryBuilder::getColumnType()]] will be called
-	 * to convert the give column type to the physical one. For example, `string` will be converted
-	 * as `varchar(255)` and `string(100)` becomes `varchar(100)`. `not null` will automatically be
-	 * appended as well.
-	 * @see \yii\db\QueryBuilder::getColumnType()
-	 */
-	public function getContentColumnType(): string
-	{
-		return Schema::TYPE_TEXT;
-	}
+    public function getElementValidationRules(): array
+    {
+        return [[function(Element $element) {
+            $value = $element->getFieldValue($this->handle);
+            if ($value === null || $value === '' || GeoJson::isValid($value) || $this->isStoredValue($value, $element)) {
+                return;
+            }
+            $element->addError("field:$this->handle", Craft::t('craft-geoman', 'Enter valid, supported GeoJSON.'));
+        }]];
+    }
 
-	/**
-	 * Normalizes the field’s value for use.
-	 *
-	 * This method is called when the field’s value is first accessed from the element. For example, the first time
-	 * `entry.myFieldHandle` is called from a template, or right before [[getInputHtml()]] is called. Whatever
-	 * this method returns is what `entry.myFieldHandle` will likewise return, and what [[getInputHtml()]]’s and
-	 * [[serializeValue()]]’s $value arguments will be set to.
-	 *
-	 * @param mixed $value The raw field value
-	 * @param ElementInterface|null $element The element the field is associated with, if there is one
-	 *
-	 * @return mixed The prepared field value
-	 */
-	public function normalizeValue($value, ElementInterface $element = null): mixed
-	{
-		return $value;
-	}
+    public function isValueEmpty(mixed $value, ElementInterface $element): bool
+    {
+        if (parent::isValueEmpty($value, $element)) {
+            return true;
+        }
+        if (is_string($value) && GeoJson::isValid($value)) {
+            $data = json_decode($value);
+            if ($data->type === 'FeatureCollection' && $data->features === []) {
+                // Do not make a previously saved required field unsavable during an upgrade.
+                return !$this->isStoredValue($value, $element);
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * Prepares the field’s value to be stored somewhere, like the content table or JSON-encoded in an entry revision table.
-	 *
-	 * Data types that are JSON-encodable are safe (arrays, integers, strings, booleans, etc).
-	 * Whatever this returns should be something [[normalizeValue()]] can handle.
-	 *
-	 * @param mixed $value The raw field value
-	 * @param ElementInterface|null $element The element the field is associated with, if there is one
-	 * @return mixed The serialized field value
-	 */
-	public function serializeValue($value, ElementInterface $element = null): mixed
-	{
-		return parent::serializeValue($value, $element);
-	}
+    private function isStoredValue(mixed $value, ElementInterface $element): bool
+    {
+        $ids = array_unique(array_filter([$element->id, $element->getCanonicalId()]));
+        foreach ($ids as $id) {
+            $stored = $element::find()
+                ->id($id)->siteId($element->siteId)->status(null)
+                ->drafts(null)->provisionalDrafts(null)->revisions(null)->trashed(null)
+                ->ignorePlaceholders()->one();
+            if ($stored !== null && $stored->getFieldValue($this->handle) === $value) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * Returns the component’s settings HTML.
-	 *
-	 * An extremely simple implementation would be to directly return some HTML:
-	 *
-	 * ```php
-	 * return '<textarea name="foo">'.$this->getSettings()->foo.'</textarea>';
-	 * ```
-	 *
-	 * For more complex settings, you might prefer to create a template, and render it via
-	 * [[\craft\web\View::renderTemplate()]]. For example, the following code would render a template loacated at
-	 * craft/plugins/myplugin/templates/_settings.html, passing the settings to it:
-	 *
-	 * ```php
-	 * return Craft::$app->getView()->renderTemplate('myplugin/_settings', [
-	 *     'settings' => $this->getSettings()
-	 * ]);
-	 * ```
-	 *
-	 * If you need to tie any JavaScript code to your settings, it’s important to know that any `name=` and `id=`
-	 * attributes within the returned HTML will probably get [[\craft\web\View::namespaceInputs() namespaced]],
-	 * however your JavaScript code will be left untouched.
-	 *
-	 * For example, if getSettingsHtml() returns the following HTML:
-	 *
-	 * ```html
-	 * <textarea id="foo" name="foo"></textarea>
-	 *
-	 * <script type="text/javascript">
-	 *     var textarea = document.getElementById('foo');
-	 * </script>
-	 * ```
-	 *
-	 * …then it might actually look like this before getting output to the browser:
-	 *
-	 * ```html
-	 * <textarea id="namespace-foo" name="namespace[foo]"></textarea>
-	 *
-	 * <script type="text/javascript">
-	 *     var textarea = document.getElementById('foo');
-	 * </script>
-	 * ```
-	 *
-	 * As you can see, that JavaScript code will not be able to find the textarea, because the textarea’s `id=`
-	 * attribute was changed from `foo` to `namespace-foo`.
-	 *
-	 * Before you start adding `namespace-` to the beginning of your element ID selectors, keep in mind that the actual
-	 * namespace is going to change depending on the context. Often they are randomly generated. So it’s not quite
-	 * that simple.
-	 *
-	 * Thankfully, [[\craft\web\View]] service provides a couple handy methods that can help you deal
-	 * with this:
-	 *
-	 * - [[\craft\web\View::namespaceInputId()]] will give you the namespaced version of a given ID.
-	 * - [[\craft\web\View::namespaceInputName()]] will give you the namespaced version of a given input name.
-	 * - [[\craft\web\View::formatInputId()]] will format an input name to look more like an ID attribute value.
-	 *
-	 * So here’s what a getSettingsHtml() method that includes field-targeting JavaScript code might look like:
-	 *
-	 * ```php
-	 * public function getSettingsHtml()
-	 * {
-	 *     // Come up with an ID value for 'foo'
-	 *     $id = Craft::$app->getView()->formatInputId('foo');
-	 *
-	 *     // Figure out what that ID is going to be namespaced into
-	 *     $namespacedId = Craft::$app->getView()->namespaceInputId($id);
-	 *
-	 *     // Render and return the input template
-	 *     return Craft::$app->getView()->renderTemplate('myplugin/_fieldinput', [
-	 *         'id'           => $id,
-	 *         'namespacedId' => $namespacedId,
-	 *         'settings'     => $this->getSettings()
-	 *     ]);
-	 * }
-	 * ```
-	 *
-	 * And the _settings.html template might look like this:
-	 *
-	 * ```twig
-	 * <textarea id="{{ id }}" name="foo">{{ settings.foo }}</textarea>
-	 *
-	 * <script type="text/javascript">
-	 *     var textarea = document.getElementById('{{ namespacedId }}');
-	 * </script>
-	 * ```
-	 *
-	 * The same principles also apply if you’re including your JavaScript code with
-	 * [[\craft\web\View::registerJs()]].
-	 *
-	 * @return string|null
-	 */
-	public function getSettingsHtml(): string
-	{
-		// Render the settings template
-		return Craft::$app->getView()->renderTemplate(
-			'craft-geoman/_components/fields/Geoman_settings',
-			[
-				'field' => $this,
-			]
-		);
-	}
+    public function getSettingsHtml(): string
+    {
+        $toolOptions = [];
+        foreach (self::DRAWING_TOOLS as $value => $label) {
+            $toolOptions[] = ['value' => $value, 'label' => Craft::t('craft-geoman', $label)];
+        }
+        return Craft::$app->getView()->renderTemplate('craft-geoman/_components/fields/Geoman_settings', [
+            'field' => $this,
+            'toolOptions' => $toolOptions,
+        ]);
+    }
 
-	/**
-	 * Returns the field’s input HTML.
-	 *
-	 * An extremely simple implementation would be to directly return some HTML:
-	 *
-	 * ```php
-	 * return '<textarea name="'.$name.'">'.$value.'</textarea>';
-	 * ```
-	 *
-	 * For more complex inputs, you might prefer to create a template, and render it via
-	 * [[\craft\web\View::renderTemplate()]]. For example, the following code would render a template located at
-	 * craft/plugins/myplugin/templates/_fieldinput.html, passing the $name and $value variables to it:
-	 *
-	 * ```php
-	 * return Craft::$app->getView()->renderTemplate('myplugin/_fieldinput', [
-	 *     'name'  => $name,
-	 *     'value' => $value
-	 * ]);
-	 * ```
-	 *
-	 * If you need to tie any JavaScript code to your input, it’s important to know that any `name=` and `id=`
-	 * attributes within the returned HTML will probably get [[\craft\web\View::namespaceInputs() namespaced]],
-	 * however your JavaScript code will be left untouched.
-	 *
-	 * For example, if getInputHtml() returns the following HTML:
-	 *
-	 * ```html
-	 * <textarea id="foo" name="foo"></textarea>
-	 *
-	 * <script type="text/javascript">
-	 *     var textarea = document.getElementById('foo');
-	 * </script>
-	 * ```
-	 *
-	 * …then it might actually look like this before getting output to the browser:
-	 *
-	 * ```html
-	 * <textarea id="namespace-foo" name="namespace[foo]"></textarea>
-	 *
-	 * <script type="text/javascript">
-	 *     var textarea = document.getElementById('foo');
-	 * </script>
-	 * ```
-	 *
-	 * As you can see, that JavaScript code will not be able to find the textarea, because the textarea’s `id=`
-	 * attribute was changed from `foo` to `namespace-foo`.
-	 *
-	 * Before you start adding `namespace-` to the beginning of your element ID selectors, keep in mind that the actual
-	 * namespace is going to change depending on the context. Often they are randomly generated. So it’s not quite
-	 * that simple.
-	 *
-	 * Thankfully, [[\craft\web\View]] provides a couple handy methods that can help you deal with this:
-	 *
-	 * - [[\craft\web\View::namespaceInputId()]] will give you the namespaced version of a given ID.
-	 * - [[\craft\web\View::namespaceInputName()]] will give you the namespaced version of a given input name.
-	 * - [[\craft\web\View::formatInputId()]] will format an input name to look more like an ID attribute value.
-	 *
-	 * So here’s what a getInputHtml() method that includes field-targeting JavaScript code might look like:
-	 *
-	 * ```php
-	 * public function getInputHtml($value, $element)
-	 * {
-	 *     // Come up with an ID value based on $name
-	 *     $id = Craft::$app->getView()->formatInputId($name);
-	 *
-	 *     // Figure out what that ID is going to be namespaced into
-	 *     $namespacedId = Craft::$app->getView()->namespaceInputId($id);
-	 *
-	 *     // Render and return the input template
-	 *     return Craft::$app->getView()->renderTemplate('myplugin/_fieldinput', [
-	 *         'name'         => $name,
-	 *         'id'           => $id,
-	 *         'namespacedId' => $namespacedId,
-	 *         'value'        => $value
-	 *     ]);
-	 * }
-	 * ```
-	 *
-	 * And the _fieldinput.html template might look like this:
-	 *
-	 * ```twig
-	 * <textarea id="{{ id }}" name="{{ name }}">{{ value }}</textarea>
-	 *
-	 * <script type="text/javascript">
-	 *     var textarea = document.getElementById('{{ namespacedId }}');
-	 * </script>
-	 * ```
-	 *
-	 * The same principles also apply if you’re including your JavaScript code with
-	 * [[\craft\web\View::registerJs()]].
-	 *
-	 * @param mixed $value The field’s value. This will either be the [[normalizeValue() normalized value]],
-	 *                                               raw POST data (i.e. if there was a validation error), or null
-	 * @param ElementInterface|null $element The element the field is associated with, if there is one
-	 *
-	 * @return string The input HTML.
-	 */
-	public function getInputHtml(mixed $value, ElementInterface $element = null): string
-	{
-		// echo "<pre>";
-		// var_dump($element);
-		// exit;
-		// Get our id and namespace
-		$view = Craft::$app->getView();
-		$locale = Craft::$app->locale->id;
-		$id = Craft::$app->getView()->formatInputId($this->handle);
-		$namespacedId = Craft::$app->getView()->namespaceInputId($id);
+    public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
+    {
+        return parent::getInputHtml($value, $element);
+    }
 
-		$lat = $this->geomanMapLatitude != 0 ? $this->geomanMapLatitude : self::DEFAULT_LAT;
-		$lng = $this->geomanMapLongitude != 0 ? $this->geomanMapLongitude : self::DEFAULT_LON;
-		$zoom = $this->geomanMapZoom != 0 ? $this->geomanMapZoom : self::DEFAULT_ZOOM;
+    protected function inputHtml(mixed $value, ?ElementInterface $element, bool $inline): string
+    {
+        return $this->renderInput($value, $element, false);
+    }
 
-		$view->registerAssetBundle(GeomanAsset::class);
-		$view->registerJsFile('https://unpkg.com/leaflet@1.7.1/dist/leaflet.js');
-		$view->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/2.2.0/Control.FullScreen.min.js');
-		$view->registerJsFile('https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js');
+    public function getStaticHtml(mixed $value, ElementInterface $element): string
+    {
+        return $this->renderInput($value, $element, true);
+    }
 
-		$view->registerCssFile('https://unpkg.com/leaflet@1.7.1/dist/leaflet.css');
-		$view->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/2.2.0/Control.FullScreen.min.css');
-		$view->registerCssFile('https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css');
+    public function getPreviewHtml(mixed $value, ?ElementInterface $element = null): string
+    {
+        return Html::tag('code', Html::encode(is_string($value) ? $value : ''));
+    }
 
-		// Render the input template
-		return Craft::$app->getView()->renderTemplate(
-			'craft-geoman/_components/fields/Geoman_input',
-			[
-				'name' => $this->handle,
-				'value' => $value,
-				'field' => $this,
-				'id' => $id,
-				'namespacedId' => $namespacedId,
-				'elementId' => $element->id,
-				'language' => Craft::$app->getLocale()->getLanguageID(),
-				'locale' => $locale,
-				'geoman' => [
-					'lat' => $lat,
-					'lng' => $lng,
-					'zoom' => $zoom,
-				]
-			]
-		);
-	}
+    private function renderInput(mixed $value, ?ElementInterface $element, bool $readOnly): string
+    {
+        $view = Craft::$app->getView();
+        $asset = $view->registerAssetBundle(GeomanAsset::class);
+        $id = Html::id($this->handle);
+        $rootId = $id . '-geoman-' . StringHelper::randomString(8);
+        return $view->renderTemplate('craft-geoman/_components/fields/Geoman_input', [
+            'name' => $this->handle,
+            'id' => $id,
+            'rootId' => $rootId,
+            'namespacedRootId' => $view->namespaceInputId($rootId),
+            'value' => $value,
+            'readOnly' => $readOnly,
+            'height' => max(240, min(2000, $this->geomanMapHeight)),
+            'options' => [
+                'assetUrl' => $asset->baseUrl . '/',
+                'lat' => $this->geomanMapLatitude,
+                'lng' => $this->geomanMapLongitude,
+                'zoom' => $this->geomanMapZoom,
+                'language' => Craft::$app->getLocale()->getLanguageID(),
+                'elementId' => $element?->id,
+                'readOnly' => $readOnly,
+                'drawingControls' => array_combine(
+                    array_keys(self::DRAWING_TOOLS),
+                    array_map(fn($tool) => in_array($tool, $this->geomanDrawingTools, true), array_keys(self::DRAWING_TOOLS)),
+                ),
+                'messages' => [
+                    'textLabel' => Craft::t('craft-geoman', 'Map text'),
+                    'fullscreen' => Craft::t('craft-geoman', 'Enter fullscreen'),
+                    'exitFullscreen' => Craft::t('craft-geoman', 'Exit fullscreen'),
+                    'tiles' => Craft::t('craft-geoman', 'Map tiles could not be loaded. Your geometry data is unchanged.'),
+                    'stored' => Craft::t('craft-geoman', 'This saved value cannot be displayed as GeoJSON. It is preserved unchanged. Export it before importing a replacement.'),
+                    'import' => Craft::t('craft-geoman', 'The file could not be imported. Choose valid, supported GeoJSON. Your existing data is unchanged.'),
+                    'importErrors' => [
+                        'json' => Craft::t('craft-geoman', 'The file does not contain valid JSON.'),
+                        'type' => Craft::t('craft-geoman', 'The GeoJSON geometry type is missing or not supported.'),
+                        'structure' => Craft::t('craft-geoman', 'The GeoJSON structure is invalid. Check the features, geometries, and properties.'),
+                        'coordinates' => Craft::t('craft-geoman', 'Coordinates must contain at least two finite numbers per position.'),
+                        'line' => Craft::t('craft-geoman', 'A line needs at least two positions.'),
+                        'text' => Craft::t('craft-geoman', 'Text annotations require Point geometry and a text string.'),
+                        'ringSize' => Craft::t('craft-geoman', 'A polygon ring needs at least four positions.'),
+                        'ring' => Craft::t('craft-geoman', 'The polygon ring is not closed. Its first and last positions must match.'),
+                    ],
+                    'importLocation' => Craft::t('craft-geoman', 'Location: {path}.', ['path' => '{path}']),
+                    'unchanged' => Craft::t('craft-geoman', 'Your existing data is unchanged.'),
+                    'replace' => Craft::t('craft-geoman', 'Replace all existing geometry with this file?'),
+                ],
+            ],
+        ]);
+    }
 }

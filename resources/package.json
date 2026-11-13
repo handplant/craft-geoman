@@ -1,27 +1,23 @@
 {
-	"name": "resources",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"development": "mix",
-		"watch": "mix watch",
-		"watch-poll": "mix watch -- --watch-options-poll=1000",
-		"hot": "mix watch --hot",
-		"production": "mix --production"
-	},
-	"author": "webworker",
-	"license": "ISC",
-	"dependencies": {
-		"@alenaksu/json-viewer": "^1.0.1",
-		"@alpinejs/intersect": "^3.10.2",
-		"@geoman-io/leaflet-geoman-free": "^2.13.0",
-		"alpinejs": "^3.10.2",
-		"geojson-validation": "^1.0.2",
-		"leaflet": "^1.8.0",
-		"leaflet.fullscreen": "^2.4.0"
-	},
-	"devDependencies": {
-		"laravel-mix": "^6.0.49"
-	}
+  "name": "craft-geoman-resources",
+  "private": true,
+  "scripts": {
+    "build": "node build.mjs",
+    "production": "npm run build",
+    "development": "node build.mjs --watch",
+    "watch": "node build.mjs --watch",
+    "test": "node --test ../tests/geojson.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@alenaksu/json-viewer": "2.1.2",
+    "@geoman-io/leaflet-geoman-free": "2.20.6",
+    "leaflet": "1.9.4",
+    "leaflet.fullscreen": "5.3.3"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
 }
